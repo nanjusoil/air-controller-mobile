@@ -1,0 +1,26 @@
+version: 2.1
+
+orbs:
+  android: circleci/android@2.1.2
+  flutter-orb: circleci/flutter@1.1.0
+  ruby: circleci/ruby@1.8.0
+  macos: circleci/macos@2.3.1
+
+jobs:
+  build:
+    executor:
+      name: android/android-machine
+      tag: 2022.03.1
+    steps:
+      - checkout
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+      - run:
+          name: Run Android Build
+          command: ./gradlew assembleRelease
+      - android/save-gradle-cache
+      - android/save-build-cache
+
+      - store_artifacts:
+          path: app/build/outputs/apk/release
+          
